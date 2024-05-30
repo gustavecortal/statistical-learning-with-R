@@ -1,0 +1,109 @@
+---
+title: "Cours informatique - Regression linéaire"
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.11.2
+  kernelspec:
+    display_name: R
+    language: R
+    name: ir
+output:
+  html_document:
+    df_print: paged
+---
+
+# Régression linéaire : partie 1
+
+## Extensions
+
+Installez l'extension `ISLR2` et `car` contenant les jeux de données et les fonctions qui nous intéressent.
+
+```{r include=FALSE}
+#install.packages("ISLR2", dep = T)
+#install.packages("car", dep = T)
+```
+
+```{r chunk1, include=FALSE}
+library(MASS)
+library(ISLR2)
+```
+
+## Régression linéaire simple
+
+L'extension `ISLR2` contient le jeu de données `Boston`. `Boston` possède la variable `medv` (valeur médiane d'une maison) pour $506$ recensements à Boston. Nous voulons prédire la valeur médiane d'une maison à partir de $12$ variables explicatives comme `rmvar` (nombre moyen de pièces par maison), `age` (âge moyen des maisons), et `lstat` (pourcentage de ménage avec un statut socioéconomique faible). `?Boston` pour une description détaillée sur jeu de données.
+
+
+```{r chunk2}
+head(Boston)
+str(Boston)
+```
+
+La fonction `attach` permet d'importer les variables d'un tableau de données dans votre environnement. Par exemple, après avoir utilisé `attach`, `Boston$age` pourra être accessible en utilisant la variable `age` importée. 
+
+```{r}
+attach(Boston)
+```
+
+Avant d'entrainer notre modèle de régression linéaire, nous pouvons observer avec `plot()` s'il existe une relation linéaire entre la variable à prédire et la variable explicative.
+
+```{r}
+plot(lstat, medv)
+```
+
+Nous utilisons la fonction `lm()` pour l'entrainement d'un modèle de régression linéaire simple à partir de la variable explicative `lstat` pour prédire la variable `medv`. 
+
+```{r chunk4}
+lm.fit <- lm(medv ~ lstat, data = Boston)
+```
+
+La fonction `summary(lm.fit)` retourne les $p$-valeurs et les écarts types des coefficients (`a` et `b`) ainsi que les statistiques $R^2$ et $F$ du modèle de régression.
+
+```{r chunk5}
+lm.fit
+summary(lm.fit)
+```
+
+Interpretez les résultats retournés par la fonction `summary(lm.fit)`.
+
+On utilise la fonction `names()` pour connaitre les informations stockées dans `lm.fit`. 
+
+```{r chunk6}
+names(lm.fit)
+lm.fit$coefficients
+```
+
+Si nous voulons prédire 3 nouvelles valeurs de `lstat` (5, 10 et 15) avec la fonction `predict()` :
+
+```{r chunk8}
+predict(lm.fit, data.frame(lstat = (c(5, 10, 15))))
+```
+
+Nous affichons la droite de régression entre `medv` et `lstat` en utilisant la fonction `abline()`.
+
+```{r chunk9}
+plot(lstat, medv)
+abline(lm.fit, lwd = 3, col ="red")
+```
+
+Nous observons qu'il pourrait y avoir une relation non-linéaire entre `lstat` et `medv`.
+
+
+## Aller plus loin
+
+- Prendre en compte la non-linéarité entre la variable à prédire et les variables explicatives (transformation non-linéaire des variables explicatives)
+- Effectuer une régression sur plusieurs variables (prendre en compte la totalité des variables explicatives de notre jeu de données, et pas seulement `lstat`)
+
+Par exemple, si nous voulons utiliser `lstat` et `age` :
+
+```{r chunk10}
+lm.fit <- lm(medv ~ lstat + age, data = Boston)
+```
+
+- Vérifier les 4 hypothèses du modèle de régression linéaire (linéarité du modèle, normalité, indépendance et homoscédasticité des erreurs)
+
+Des idées pour aborder ces problèmes ?

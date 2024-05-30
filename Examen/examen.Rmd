@@ -1,0 +1,145 @@
+---
+title: "Examen 21 mars 2023"
+output: html_document
+date: "2023-03-15"
+---
+
+### Prénom : [INSEREZ PRENOM]
+### Nom : [INSEREZ NOM]
+
+# Le prix des logements sur le continent d'Hyperborée
+
+## Introduction
+
+### Instructions
+
+Le continent fictif d'Hyperborée possède des données sur ses logements. Vous devez appliquer les différentes notions vues en cours pour analyser les données. Vous êtes guidés pour chaque partie. Prenez soin de la rédaction et répondez précisément aux questions avec du code et une réponse en langage naturel. Le barème n'est pas définitif. Durée 1h30. Le fichier complété est à soumettre sur Moodle : <https://ecampus.paris-saclay.fr/course/view.php?id=38925#section-0>. Assurez-vous que le code s’exécute correctement et que le rendu HTML est cohérent. N'oubliez pas de charger les extensions dans votre environnement (par exemple, l'extension `tree` pour les arbres de décision).
+
+Exécutez cette commande avant de travailler (fixer un seed permet la reproductibilité des résultats).
+
+```{r}
+set.seed(42)
+```
+
+### Description des variables
+
+`prix` : prix d'un logement
+
+`metreCarre` : la taille d'un logement en mètres carrés
+
+`nombreDeChambres` : le nombre de chambres d'un logement
+
+`nombrePrecedentProprio` : le nombre de propriétaires précédents
+
+`annee` : l'année de construction d'un logement
+
+`sousSol` : la taille du sous-sol en mètres carrés
+
+`grenier` : la taille du grenier en mètres carrés
+
+`garage` : la taille du garage en mètres carrés
+
+`possedeCour` : le logement possède une cour (= 1) ou non (= 0)
+
+`possedePiscine` : le logement possède une piscine (= 1) ou non (= 0)
+
+`possedeProtectionTempête` : le logement possède une protection tempête (= 1) ou non (= 0)
+
+`possedeStockage` : le logement possède un lieu de stockage (= 1) ou non (= 0)
+
+`estNouveau` : le logement est nouveau ou a été renové récemment (= 1) ou non (= 0)
+
+`richesseQuartier` : la richesse du quartier du logement (de 0 à 10 avec 0 = très bas et 10 = très haut)
+
+### Prétraitement des données (10 points)
+
+- Importez le jeu de données "logements.csv".
+
+- Donnez le nombre de logements et le nombre de variables.
+
+- Donnez le nombre de valeurs manquantes pour la variable `prix`. Donnez les index des valeurs manquantes. Supprimez les logements ayant des valeurs manquantes. 
+
+- Transformez les variables qualitatives en facteur (factor).
+
+- Pour la variable `richesseQuartier`, transformez les 3 premieres modalites en "BASSE", les 4 suivantes en "MOYENNE" et les 3 dernieres en "HAUTE". Combien y a-t-il de logements dans un quartier avec richesse "HAUTE" ? 
+
+- Visualisez la distribution des mètres carrés. Qu'est-ce que vous observez ? Combien y a-t-il de valeurs aberrantes ? Supprimez les valeurs aberrantes du jeu de données. 
+
+### Analyse exploratoire (10 points)
+
+- Visualisez l'histogramme des mètres carrés des greniers. Les barres doivent être rouges. Donnez un titre et nommez l'axe des abscisses.
+
+- Visualisez la dispersion du prix selon qu'un logement possède une protection tempête ou non.
+
+- Y a-t-il des logements gratuits ? 
+
+- Quand le premier logement fut-il construit ? 
+
+- Donnez la moyenne des mètres carrés des logements ayant une cour, une piscine et un prix strictement inférieur à 50000.
+
+- Donnez L'écart-type du prix des logements construits en 413 ou situés dans un quartier avec comme richesse "BASSE" ou "HAUTE".
+
+- Donnez la distribution des richesses des quartiers avec des logements ayant un sous-sol possèdant strictement moins de 7896 mètres carrés et un grenier avec plus de 100 mètres carrés (inclus).
+
+- Donnez le nombre de logements ayant le nombre maximum de chambres sur le continent.
+
+- Donnez le nombre de logements soit nouveaux/renovés soit ayant des mètres carrés strictement supérieurs à la moyenne des mètres carrés du continent.
+
+### Préparation pour l'entrainement des modèles (5 points)
+
+On cherche à prédire le prix des logements.
+
+- Quelle est la variable continue qui a la plus grande corrélation de Pearson avec `prix` ?
+
+- Transformez la variable `prix` en facteur (`prixFacteur`) ayant deux modalités "BAS" et "HAUT". Si le prix est strictement inférieur au prix médian, alors le prix est "BAS", sinon il est "HAUT".
+
+- Pourquoi faut-il diviser le jeu de données en deux (donnés d'entraînement et d'évaluation) pour l'entraînement de modèles prédictifs ?
+
+- Divisez le jeu de données en deux : les données d'entrainements sont les logements construits avant 415 (non inclus). Les données d'évaluation sont les logements restants (après l'année 415 inclus). 
+
+- Combien y a-t-il de données d'entrainements ? 
+
+### Régression linéaire (10 points)
+
+- A quoi sert la fonction de vraisemblance pour la régression linéaire ? 
+
+- Entraînez un modèle de régression linéaire pour prédire la variable `prix` à partir de la variable `metreCarre` sur les données d’entraînement.
+
+- Prédisez les données d'évaluation. Donnez l'erreur des moindres carrés (MSE : `Mean Squared Error`) sur les données d'entrainement et sur les données d'évaluation. Quelle erreur est la plus petite ? Est-ce cohérent ? Justifiez votre réponse. 
+
+- Prédisez les prix des logements ayant comme mètres carrés respectifs 1000, 50 000 et 100 000. 
+
+- Entraînez un modèle de régression linéaire pour prédire la variable `prix` à partir des variables `metreCarre`, `richesseQuartier`, `possedePiscine`, `possedeProtectionTempête` et `estNouveau` sur les données d’entraînement. Quelles sont les variables significatives ? Interprétez l'influence des variables significatives sur la prédiction du prix. 
+
+- Est-ce que la prise en compte de plusieurs variables a permis d'augmenter la précision de notre modèle ?
+
+- Donnez les hypothèses du modèle de régression linéaire. Donnez une manière de vérifier une des hypothèses avec R. 
+
+
+### Régression logistique (5 points)
+
+- Est-il possible d’entraîner une régression logistique à partir d'une transformation non-linéaire d'une variable explicative ?
+
+- Entraînez un modèle de régression logistique pour prédire la variable `prix` à partir des variables `metreCarre`, `richesseQuartier`, `possedePiscine`, `possedeProtectionTempête` et `estNouveau` sur les données d’entraînement. Quelles sont les variables significatives ? Interprétez l'influence des variables significatives sur la prédiction du prix. 
+
+- Prédisez les données d'évaluation. Donnez la matrice de confusion sur les données d'évaluation et l'interpretez. Quelle est la précision du modèle ? 
+
+### Arbre de régression, de décision et forêts aléatoires (10 points)
+
+- Construisez un arbre de régression pour prédire le `prix` à partir de toutes les variables explicatives sur les données d'entrainement. On impose d'utiliser comme critère d'impureté la deviance (et **pas** l'indice de gini !). Combien de feuilles possède l'arbre construit ? Quel(s) sont/est les/la variable(s) utilisée(s) par l'arbre ? 
+
+- Affichez l'arbre construit et l'interpreter.
+
+- Elaguer l'arbre construit pour seulement avoir deux feuilles. Généralement, à quoi sert l'élagage ? 
+
+- Pour notre problème, l'arbre de regression a-t-il une meilleure performance par rapport à la régression logistique ? 
+
+- Quelle est la différence entre le bagging et la forêt aléatoire ? 
+
+- Entraînez une forêt aléatoire sur les données d’entraînement avec 250 arbres et 6 variables choisies aléatoirement pour chaque séparation. Les performances ont-elles augmentées ? Y a-t-il des situations où les arbres sont plus intéressants que les forêts aléatoires ? Justifiez votre réponse. 
+
+- Quels sont les deux moyens de quantifier à quel point une variable est importante pour la prédiction ? Justifiez votre réponse en analysant l'importance des variables avec ces deux indicateurs. 
+
+### Analyse en Composantes Principales (5 points)
+
+- Effectuez une Analyse en Composantes Principales. Combien de composantes principales faut-il considérer pour expliquer au moins 80% de la variance ? Donnez deux raisons de combiner l'Analyse en Composantes Principales avec les modèles prédictifs.
